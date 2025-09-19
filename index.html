@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>С днём рождения, Аркадий Андреевич!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Dancing+Script:wght@700&family=Montserrat:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #1a1a2e;
+      --secondary: #16213e;
+      --accent: #e94560;
+      --light: #f5f5f5;
+      --gold: #ffd700;
+      --blue: #2196F3;
+      --purple: #9C27B0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      overflow-x: hidden;
+      position: relative;
+      color: #fff;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Canvas для салюта */
+    #fireworksCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2;
+      opacity: 0.7;
+    }
+
+    /* Звезды на фоне */
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle 3s infinite;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.2); }
+    }
+
+    /* Floating elements */
+    .floating-elements {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .floating-emoji {
+      position: absolute;
+      font-size: 30px;
+      animation: floatUp 15s infinite;
+      opacity: 0.7;
+    }
+
+    @keyframes floatUp {
+      0% {
+        bottom: -100px;
+        transform: translateX(0) rotate(0deg);
+      }
+      100% {
+        bottom: calc(100% + 100px);
+        transform: translateX(100px) rotate(360deg);
+      }
+    }
+
+    /* Главный контейнер */
+    .container {
+      position: relative;
+      z-index: 10;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    /* Карточка с поздравлением */
+    .birthday-card {
+      width: min(900px, 100%);
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 30px;
+      padding: 40px;
+      box-shadow: 
+        0 30px 60px rgba(0, 0, 0, 0.3),
+        0 0 100px rgba(255, 215, 0, 0.2),
+        inset 0 0 30px rgba(255, 255, 255, 0.05);
+      transform: translateY(20px);
+      opacity: 0;
+      animation: slideUp 1s ease-out 0.5s forwards;
+      position: relative;
+      overflow: hidden;
+    }
+
+    @keyframes slideUp {
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    /* Animated border */
+    .birthday-card::before {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 30px;
+      padding: 3px;
+      background: linear-gradient(45deg, #FFD700, #FF69B4, #00CED1, #FF6347, #98FB98, #FFD700);
+      background-size: 300% 300%;
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      animation: borderAnimation 3s linear infinite;
+      opacity: 0.5;
+    }
+
+    @keyframes borderAnimation {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+
+    /* Badge */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 25px;
+      background: linear-gradient(135deg, var(--gold), #FFA500);
+      border-radius: 50px;
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--primary);
+      box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+      animation: pulse 2s ease-in-out infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    /* Заголовок */
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      position: relative;
+    }
+
+    .main-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 900;
+      background: linear-gradient(45deg, #FFD700, #FFA500, #FF6347, #FF1493, #00CED1, #FFD700);
+      background-size: 200% 200%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: titleGradient 3s ease-in-out infinite;
+      margin-bottom: 10px;
+      line-height: 1.1;
+      filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.3));
+    }
+
+    @keyframes titleGradient {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .subtitle {
+      font-size: 1.3rem;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 300;
+      letter-spacing: 2px;
+      margin-bottom: 30px;
+    }
+
+    /* Аватар */
+    .avatar-section {
+      display: flex;
+      justify-content: center;
+      margin: 35px 0;
+    }
+
+    .avatar {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      box-shadow: 
+        0 0 50px rgba(102, 126, 234, 0.6),
+        0 0 100px rgba(102, 126, 234, 0.3);
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .avatar::before {
+      content: "";
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      padding: 3px;
+      background: linear-gradient(45deg, #ffd700, #ff6b6b, #4ecdc4, #ffd700);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      animation: rotate 3s linear infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes rotate {
+      to { transform: rotate(360deg); }
+    }
+
+    .avatar .initials {
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: white;
+      z-index: 1;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Печатающийся текст */
+    .typewriter-container {
+      background: rgba(233, 69, 96, 0.1);
+      border: 1px solid rgba(233, 69, 96, 0.3);
+      border-radius: 15px;
+      padding: 20px;
+      margin: 30px 0;
+      min-height: 100px;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .typewriter {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #ff6b6b;
+      text-align: center;
+      text-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+      width: 100%;
+      line-height: 1.6;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1.3em;
+      background: #ff6b6b;
+      margin-left: 4px;
+      animation: blink 1s infinite;
+      vertical-align: text-bottom;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    .wrong {
+      position: relative;
+      color: #ff4757;
+      text-decoration: line-through;
+      text-decoration-thickness: 2px;
+      opacity: 0.7;
+    }
+
+    /* Сообщения */
+    .message-cards {
+      display: grid;
+      gap: 20px;
+      margin: 30px 0;
+    }
+
+    .message-card {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 25px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      animation: slideIn 0.6s ease-out forwards;
+    }
+
+    .message-card:nth-child(1) { animation-delay: 0.5s; }
+    .message-card:nth-child(2) { animation-delay: 0.7s; }
+    .message-card:nth-child(3) { animation-delay: 0.9s; }
+    .message-card:nth-child(4) { animation-delay: 1.1s; }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .message-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+      transform: rotate(45deg);
+      animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+
+    .message {
+      font-size: 1.15rem;
+      line-height: 1.8;
+      color: rgba(255, 255, 255, 0.95);
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .message .emoji {
+      display: inline-block;
+      font-size: 1.3em;
+      margin: 0 3px;
+      animation: bounce 2s infinite;
+    }
+
+    .highlight {
+      color: var(--gold);
+      font-weight: 700;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-5px); }
+      60% { transform: translateY(-3px); }
+    }
+
+    /* Подпись */
+    .signature {
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #ffd700;
+      margin-top: 30px;
+      position: relative;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    }
+
+    .signature::before,
+    .signature::after {
+      content: "✨";
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.5rem;
+      animation: sparkle 1.5s ease-in-out infinite;
+    }
+
+    .signature::before {
+      left: -40px;
+    }
+
+    .signature::after {
+      right: -40px;
+      animation-delay: 0.75s;
+    }
+
+    @keyframes sparkle {
+      0%, 100% { opacity: 0; transform: translateY(-50%) scale(0); }
+      50% { opacity: 1; transform: translateY(-50%) scale(1); }
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 2px solid rgba(255, 215, 0, 0.3);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      opacity: 0;
+      animation: fadeIn 1s ease-out 1.5s forwards;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    .team {
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .date {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+    }
+
+    /* Кнопки действий */
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+
+    .fireworks-btn, .sound-btn {
+      padding: 15px 35px;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .fireworks-btn {
+      background: linear-gradient(135deg, #ff6b6b, #ff8787);
+      box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+    }
+
+    .sound-btn {
+      background: linear-gradient(135deg, #4ecdc4, #44a08d);
+      box-shadow: 0 10px 30px rgba(78, 205, 196, 0.3);
+    }
+
+    .fireworks-btn:hover, .sound-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(255, 107, 107, 0.4);
+    }
+
+    /* Адаптивность */
+    @media (max-width: 768px) {
+      .birthday-card {
+        padding: 30px 20px;
+      }
+      
+      .main-title {
+        font-size: 2.2rem;
+      }
+      
+      .avatar {
+        width: 150px;
+        height: 150px;
+      }
+      
+      .avatar .initials {
+        font-size: 2.5rem;
+      }
+      
+      .typewriter-container {
+        height: 120px;
+        min-height: 120px;
+      }
+      
+      .typewriter {
+        font-size: 1.05rem;
+      }
+      
+      .message {
+        font-size: 1rem;
+      }
+      
+      .signature::before,
+      .signature::after {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Canvas для салюта -->
+  <canvas id="fireworksCanvas"></canvas>
+  
+  <!-- Звезды на фоне -->
+  <div class="stars" id="stars"></div>
+  
+  <!-- Floating elements -->
+  <div class="floating-elements" id="floatingElements"></div>
+
+  <!-- Аудио элемент для фоновой музыки -->
+  <audio id="backgroundMusic" loop>
+    <source src="./music.mp3" type="audio/mpeg">
+    <source src="./music.ogg" type="audio/ogg">
+    <source src="./music.wav" type="audio/wav">
+    <source src="./music.m4a" type="audio/mp4">
+    <source src="./birthday.mp3" type="audio/mpeg">
+    <source src="./birthday-music.mp3" type="audio/mpeg">
+    <source src="./happy-birthday.mp3" type="audio/mpeg">
+    <source src="./background.mp3" type="audio/mpeg">
+    <source src="./celebration.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="container">
+    <div class="birthday-card">
+      <div class="header">
+        <div class="badge">
+          ⭐ КОЛЛЕКТИВ ДРНУ ⭐
+        </div>
+        <h1 class="main-title">🎉 С днём рождения, Аркадий Андреевич! 🎂</h1>
+        <p class="subtitle">✨ Лучший работник и надёжный начальник отдела ✨</p>
+      </div>
+      
+      <div class="avatar-section">
+        <div class="avatar" id="avatar">
+          <span class="initials">АА</span>
+        </div>
+      </div>
+      
+      <div class="typewriter-container">
+        <div class="typewriter">
+          <span id="typewriter-text"></span><span class="cursor"></span>
+        </div>
+      </div>
+      
+      <div class="message-cards">
+        <div class="message-card">
+          <div class="message">
+            <p>От всего коллектива ДРНУ — <span class="highlight">самые тёплые поздравления!</span> <span class="emoji">🎊</span></p>
+          </div>
+        </div>
+        
+        <div class="message-card">
+          <div class="message">
+            <p>Ты настолько <span class="highlight">ответственен и профессионален</span>, что мы иногда забываем просто <span class="highlight">говорить спасибо!</span> <span class="emoji">💫</span></p>
+          </div>
+        </div>
+        
+        <div class="message-card">
+          <div class="message">
+            <p>Благодаря тебе задачи становятся <span class="highlight">легче</span>, сроки — <span class="highlight">реальнее</span>, а результат — <span class="highlight">впечатляющим!</span> <span class="emoji">🚀</span></p>
+          </div>
+        </div>
+        
+        <div class="message-card">
+          <div class="message">
+            <p>Желаем <span class="highlight">крепкого здоровья</span>, семье — <span class="highlight">благополучия</span>, а тебе — <span class="highlight">ярких побед</span> и только <span class="highlight">лучших новостей</span> каждый день! <span class="emoji">🌟</span></p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="signature">💖 С уважением, команда ДРНУ</div>
+      
+      <div class="footer">
+        <div class="team">
+          <span>🎉</span>
+          <span>Коллектив ДРНУ</span>
+        </div>
+        <div class="date" id="date"></div>
+      </div>
+      
+      <div class="action-buttons">
+        <button class="fireworks-btn" onclick="launchFireworks()">🎆 Праздничный салют!</button>
+        <button class="sound-btn" onclick="toggleSound()">🎵 Музыка</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+// Создаем звездное небо
+(function() {
+  const starsContainer = document.getElementById('stars');
+  const starCount = 100;
+  
+  for (let i = 0; i < starCount; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.width = star.style.height = Math.random() * 3 + 'px';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.animationDelay = Math.random() * 3 + 's';
+    star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+    starsContainer.appendChild(star);
+  }
+})();
+
+// Floating elements
+(function() {
+  const container = document.getElementById('floatingElements');
+  const emojis = ['🎈', '🎉', '🎊', '✨', '🌟', '💫', '🎁', '🎂'];
+  const count = 15;
+  
+  for (let i = 0; i < count; i++) {
+    const el = document.createElement('div');
+    el.className = 'floating-emoji';
+    el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    el.style.left = Math.random() * 100 + '%';
+    el.style.animationDelay = Math.random() * 15 + 's';
+    el.style.animationDuration = (15 + Math.random() * 10) + 's';
+    container.appendChild(el);
+  }
+})();
+
+// Дата
+document.getElementById('date').textContent = new Date().toLocaleDateString('ru-RU', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+});
+
+// Загрузка аватара
+(function() {
+  const avatar = document.getElementById('avatar');
+  const initials = avatar.querySelector('.initials');
+  const imageUrls = [
+    './arkadiy.jpg', './arkadiy.JPG', './arkadiy.jpeg', './arkadiy.JPEG',
+    './arkadiy.png', './arkadiy.PNG', './arkadiy.webp', './arkadiy.WEBP',
+    './photo.jpg', './photo.JPG', './avatar.jpg', './avatar.JPG'
+  ];
+  
+  let currentIndex = 0;
+  function tryLoadImage() {
+    if (currentIndex >= imageUrls.length) return;
+    
+    const img = new Image();
+    img.onload = function() {
+      initials.style.display = 'none';
+      img.style.cssText = `
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+        z-index: 0;
+      `;
+      avatar.appendChild(img);
+    };
+    img.onerror = function() {
+      currentIndex++;
+      tryLoadImage();
+    };
+    img.src = imageUrls[currentIndex];
+  }
+  
+  setTimeout(tryLoadImage, 100);
+})();
+
+// Печатающийся текст
+(function() {
+  const el = document.getElementById('typewriter-text');
+  const phrases = [
+    ["Желаем ", "обычного", "крепкого", " здоровья и успехов! 💪"],
+    ["Пусть работа приносит ", "усталость", "удовольствие", " и признание! ⭐"],
+    ["В команде ты — ", "рядовой", "незаменимый", " лидер! 🎯"],
+    ["А жизнь будет ", "монотонной", "яркой", " и счастливой! 🎆"]
+  ];
+  
+  const typeDelay = 60;
+  const eraseDelay = 40;
+  const pauseBeforeErase = 800;
+  const pauseAfterPhrase = 1500;
+  
+  async function typeText(text, startIndex = 0) {
+    for (let i = startIndex; i < text.length; i++) {
+      el.textContent = text.slice(0, i + 1);
+      await new Promise(resolve => setTimeout(resolve, typeDelay));
+    }
+  }
+  
+  async function markWrong(prefix, wrongWord) {
+    el.innerHTML = `${prefix}<span class="wrong" id="wrong-word">${wrongWord}</span>`;
+  }
+  
+  async function eraseWrong() {
+    const wrongSpan = document.getElementById('wrong-word');
+    if (!wrongSpan) return;
+    
+    const text = wrongSpan.textContent;
+    for (let i = text.length; i > 0; i--) {
+      wrongSpan.textContent = text.slice(0, i - 1);
+      await new Promise(resolve => setTimeout(resolve, eraseDelay));
+    }
+    wrongSpan.remove();
+  }
+  
+  async function showPhrase([prefix, wrong, right, suffix]) {
+    el.textContent = '';
+    await typeText(prefix + wrong);
+    await new Promise(resolve => setTimeout(resolve, pauseBeforeErase));
+    markWrong(prefix, wrong);
+    await new Promise(resolve => setTimeout(resolve, 300));
+    await eraseWrong();
+    await typeText(prefix + right);
+    await typeText(prefix + right + suffix, (prefix + right).length);
+    await new Promise(resolve => setTimeout(resolve, pauseAfterPhrase));
+  }
+  
+  (async function loop() {
+    let index = 0;
+    while (true) {
+      await showPhrase(phrases[index % phrases.length]);
+      index++;
+    }
+  })();
+})();
+
+// САЛЮТ
+const canvas = document.getElementById('fireworksCanvas');
+const ctx = canvas.getContext('2d');
+let fireworks = [];
+let particles = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+class Particle {
+  constructor(x, y, color, velocity, size = 2) {
+    this.x = x;
+    this.y = y;
+    this.color = color;
+    this.velocity = velocity;
+    this.size = size;
+    this.opacity = 1;
+    this.decay = Math.random() * 0.02 + 0.005;
+    this.gravity = 0.05;
+  }
+
+  update() {
+    this.x += this.velocity.x;
+    this.y += this.velocity.y;
+    this.velocity.y += this.gravity;
+    this.velocity.x *= 0.99;
+    this.opacity -= this.decay;
+  }
+
+  draw() {
+    ctx.save();
+    ctx.globalAlpha = this.opacity;
+    ctx.fillStyle = this.color;
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = this.color;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+class Firework {
+  constructor(sx, sy, tx, ty) {
+    this.x = sx;
+    this.y = sy;
+    this.sx = sx;
+    this.sy = sy;
+    this.tx = tx;
+    this.ty = ty;
+    this.distanceToTarget = Math.hypot(tx - sx, ty - sy);
+    this.distanceTraveled = 0;
+    this.trail = [];
+    this.trailLength = 10;
+    this.angle = Math.atan2(ty - sy, tx - sx);
+    this.speed = 2;
+    this.acceleration = 1.05;
+    this.brightness = Math.random() * 50 + 50;
+    this.targetRadius = 1;
+    this.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+  }
+
+  update(index) {
+    this.trail.push({ x: this.x, y: this.y });
+    if (this.trail.length > this.trailLength) {
+      this.trail.shift();
+    }
+
+    if (this.targetRadius < 8) {
+      this.targetRadius += 0.3;
+    } else {
+      this.targetRadius = 1;
+    }
+
+    this.speed *= this.acceleration;
+    const vx = Math.cos(this.angle) * this.speed;
+    const vy = Math.sin(this.angle) * this.speed;
+
+    this.distanceTraveled = Math.hypot(this.x + vx - this.sx, this.y + vy - this.sy);
+
+    if (this.distanceTraveled >= this.distanceToTarget) {
+      createParticles(this.tx, this.ty);
+      fireworks.splice(index, 1);
+    } else {
+      this.x += vx;
+      this.y += vy;
+    }
+  }
+
+  draw() {
+    // Рисуем след
+    ctx.strokeStyle = this.color;
+    ctx.lineWidth = 2;
+    
+    for (let i = 0; i < this.trail.length; i++) {
+      ctx.save();
+      ctx.globalAlpha = i / this.trail.length;
+      ctx.beginPath();
+      ctx.arc(this.trail[i].x, this.trail[i].y, 1, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // Рисуем ракету
+    ctx.save();
+    ctx.fillStyle = this.color;
+    ctx.shadowBlur = 20;
+    ctx.shadowColor = this.color;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, 3, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+function createParticles(x, y) {
+  const particleCount = 80 + Math.floor(Math.random() * 40);
+  const hue = Math.random() * 360;
+  
+  for (let i = 0; i < particleCount; i++) {
+    const angle = (Math.PI * 2 / particleCount) * i;
+    const velocity = Math.random() * 3 + 2;
+    const color = `hsl(${hue + Math.random() * 60 - 30}, 100%, ${50 + Math.random() * 20}%)`;
+    
+    particles.push(new Particle(
+      x,
+      y,
+      color,
+      {
+        x: Math.cos(angle) * velocity * (0.5 + Math.random()),
+        y: Math.sin(angle) * velocity * (0.5 + Math.random())
+      },
+      Math.random() * 2 + 1
+    ));
+  }
+  
+  // Центральная вспышка
+  for (let i = 0; i < 20; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const velocity = Math.random() * 2;
+    
+    particles.push(new Particle(
+      x,
+      y,
+      '#ffffff',
+      {
+        x: Math.cos(angle) * velocity,
+        y: Math.sin(angle) * velocity
+      },
+      Math.random() + 0.5
+    ));
+  }
+}
+
+function launchFireworks() {
+  // Запускаем сразу несколько залпов
+  for (let i = 0; i < 5; i++) {
+    setTimeout(() => {
+      fireworks.push(new Firework(
+        Math.random() * canvas.width,
+        canvas.height,
+        Math.random() * canvas.width,
+        Math.random() * canvas.height * 0.5
+      ));
+    }, i * 200);
+  }
+}
+
+// Автоматический запуск
+setInterval(() => {
+  if (Math.random() < 0.05) {
+    fireworks.push(new Firework(
+      Math.random() * canvas.width,
+      canvas.height,
+      Math.random() * canvas.width,
+      Math.random() * canvas.height * 0.6 + 50
+    ));
+  }
+}, 1500);
+
+function animate() {
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  let i = fireworks.length;
+  while (i--) {
+    fireworks[i].draw();
+    fireworks[i].update(i);
+  }
+
+  let j = particles.length;
+  while (j--) {
+    particles[j].draw();
+    particles[j].update();
+
+    if (particles[j].opacity <= 0) {
+      particles.splice(j, 1);
+    }
+  }
+
+  requestAnimationFrame(animate);
+}
+
+animate();
+
+// Запуск салюта по клику
+canvas.style.pointerEvents = 'auto';
+canvas.addEventListener('click', (e) => {
+  fireworks.push(new Firework(
+    Math.random() * canvas.width,
+    canvas.height,
+    e.clientX,
+    e.clientY
+  ));
+});
+
+// Первый автоматический салют
+setTimeout(launchFireworks, 1500);
+
+// Музыка
+let soundOn = false;
+const backgroundMusic = document.getElementById('backgroundMusic');
+
+// Попытка автоматического воспроизведения при загрузке
+window.addEventListener('load', () => {
+  backgroundMusic.volume = 0.3;
+  backgroundMusic.play().catch(() => {
+    console.log('Автовоспроизведение заблокировано. Используйте кнопку для включения музыки.');
+  });
+});
+
+function toggleSound() {
+  const btn = document.querySelector('.sound-btn');
+  
+  if (!soundOn) {
+    backgroundMusic.play().then(() => {
+      soundOn = true;
+      btn.textContent = '🔇 Выключить';
+      btn.style.background = 'linear-gradient(135deg, #ff6b6b, #ff8787)';
+    }).catch(error => {
+      console.error('Ошибка воспроизведения:', error);
+      alert('Не удалось воспроизвести музыку. Проверьте, что файл музыки находится в папке с сайтом.');
+    });
+  } else {
+    backgroundMusic.pause();
+    soundOn = false;
+    btn.textContent = '🎵 Музыка';
+    btn.style.background = 'linear-gradient(135deg, #4ecdc4, #44a08d)';
+  }
+}
+
+// Проверка состояния музыки
+backgroundMusic.addEventListener('play', () => {
+  soundOn = true;
+  const btn = document.querySelector('.sound-btn');
+  if (btn) {
+    btn.textContent = '🔇 Выключить';
+    btn.style.background = 'linear-gradient(135deg, #ff6b6b, #ff8787)';
+  }
+});
+
+backgroundMusic.addEventListener('pause', () => {
+  soundOn = false;
+  const btn = document.querySelector('.sound-btn');
+  if (btn) {
+    btn.textContent = '🎵 Музыка';
+    btn.style.background = 'linear-gradient(135deg, #4ecdc4, #44a08d)';
+  }
+});
+
+// 3D эффект для карточки
+const card = document.querySelector('.birthday-card');
+const container = document.querySelector('.container');
+
+container.addEventListener('mousemove', (e) => {
+  const rect = card.getBoundingClientRect();
+  const x = (e.clientX - rect.left) / rect.width;
+  const y = (e.clientY - rect.top) / rect.height;
+  
+  const rotateX = (y - 0.5) * 10;
+  const rotateY = (x - 0.5) * 10;
+  
+  card.style.transform = `perspective(1000px) rotateX(${-rotateX}deg) rotateY(${rotateY}deg)`;
+});
+
+container.addEventListener('mouseleave', () => {
+  card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+});
+</script>
+</body>
+</html>
